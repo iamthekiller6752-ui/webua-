@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Сторінку не знайдено · WebUa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#05070f;--blue:#2f6bff;--blue-soft:#5b8dff;
+    --yellow:#ffd23f;--yellow-soft:#ffe27a;
+    --text:#eef2ff;--muted:#8a94b8;
+    --border:rgba(255,255,255,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg-0);color:var(--text);
+    min-height:100vh;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;text-align:center;
+  }
+
+  /* ФОН */
+  .bg-orbs{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:0.5;}
+  .orb.b1{width:600px;height:600px;background:radial-gradient(circle,#2f6bff,transparent 70%);top:-200px;left:-200px;animation:float1 22s ease-in-out infinite;}
+  .orb.b2{width:520px;height:520px;background:radial-gradient(circle,#ffd23f,transparent 70%);bottom:-220px;right:-180px;animation:float2 26s ease-in-out infinite;opacity:0.35;}
+  @keyframes float1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(80px,-60px) scale(1.15);}}
+  @keyframes float2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-70px,-40px) scale(1.1);}}
+
+  .grid-overlay{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size:72px 72px;
+    mask-image:radial-gradient(ellipse at center, #000 30%, transparent 82%);
+    -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, transparent 82%);
+  }
+
+  .stars{position:fixed;inset:0;z-index:-2;pointer-events:none;}
+  .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 4s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:0.1;transform:scale(0.6);}50%{opacity:1;transform:scale(1.4);}}
+
+  .particles{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;}
+  .particle{
+    position:absolute;width:3px;height:3px;border-radius:50%;
+    background:#5b8dff;opacity:0.5;
+    animation:rise linear infinite;
+    box-shadow:0 0 8px #5b8dff;
+  }
+  @keyframes rise{
+    0%{transform:translateY(100vh) scale(0);opacity:0;}
+    10%{opacity:1;}90%{opacity:1;}
+    100%{transform:translateY(-100px) scale(1.5);opacity:0;}
+  }
+
+  /* КОНТЕНТ */
+  .container{
+    position:relative;z-index:2;
+    max-width:640px;
+    animation:fadeUp 1s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+
+  .error-code{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(6rem,20vw,12rem);
+    font-weight:700;line-height:1;letter-spacing:-0.06em;
+    background:linear-gradient(135deg,#5b8dff 0%, #ffd23f 50%, #5b8dff 100%);
+    background-size:200% auto;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:shimmer 4s linear infinite, glitch 6s infinite;
+    margin-bottom:8px;
+    position:relative;
+  }
+  @keyframes shimmer{to{background-position:200% center;}}
+  @keyframes glitch{
+    0%,88%,100%{transform:translate(0);}
+    90%{transform:translate(-3px,2px);}
+    92%{transform:translate(3px,-2px);}
+    94%{transform:translate(-2px,-2px);}
+    96%{transform:translate(2px,2px);}
+  }
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(1.4rem,4vw,2rem);
+    font-weight:700;letter-spacing:-0.02em;
+    margin-bottom:16px;
+  }
+  h1 .accent{
+    background:linear-gradient(90deg,var(--blue-soft),var(--yellow));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  p{
+    color:var(--muted);
+    font-size:clamp(0.95rem,2vw,1.05rem);
+    line-height:1.7;
+    margin-bottom:36px;
+    max-width:480px;
+    margin-left:auto;margin-right:auto;
+  }
+
+  .cta-row{
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:15px 30px;border-radius:14px;
+    font-weight:600;font-size:1rem;
+    text-decoration:none;cursor:pointer;border:none;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background .3s ease;
+    position:relative;overflow:hidden;font-family:inherit;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#2f6bff,#5b8dff);color:#fff;
+    box-shadow:0 12px 32px rgba(47,107,255,0.45);
+    animation:pulseBtn 3s ease-in-out infinite 1.5s;
+  }
+  @keyframes pulseBtn{
+    0%,100%{box-shadow:0 12px 32px rgba(47,107,255,0.45),0 0 0 0 rgba(47,107,255,0.5);}
+    50%{box-shadow:0 12px 32px rgba(47,107,255,0.45),0 0 0 18px rgba(47,107,255,0);}
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(47,107,255,0.65);}
+  .btn-ghost{
+    background:rgba(255,255,255,0.05);color:var(--text);
+    border:1px solid var(--border);backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  .btn-ghost:hover{background:rgba(255,210,63,0.12);border-color:rgba(255,210,63,0.45);transform:translateY(-3px);color:var(--yellow);}
+  .btn svg{width:18px;height:18px;flex-shrink:0;}
+
+  .hint{
+    margin-top:32px;
+    font-size:0.85rem;
+    color:var(--muted);
+    opacity:0.6;
+    letter-spacing:0.05em;
+  }
+
+  @media (max-width:640px){
+    body{padding:20px;}
+    .btn{padding:13px 22px;font-size:0.94rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb b1"></div>
+  <div class="orb b2"></div>
+</div>
+<div class="grid-overlay"></div>
+<div class="stars" id="stars"></div>
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="error-code">404</div>
+  <h1>Сторінку <span class="accent">не знайдено</span></h1>
+  <p>Схоже, ви перейшли за посиланням, якого не існує. Можливо, адреса введена з помилкою або сторінку було видалено.</p>
+
+  <div class="cta-row">
+    <a href="/" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+      На головну
+    </a>
+    <a href="https://t.me/mackickicen" target="_blank" rel="noopener" class="btn btn-ghost">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Замовити сайт
+    </a>
+  </div>
+
+  <div class="hint">WEBUA · ПОМИЛКА 404</div>
+</div>
+
+<script>
+(function(){
+  var wrap = document.getElementById('stars');
+  for(var i=0;i<70;i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + '%';
+    s.style.top = Math.random()*100 + '%';
+    s.style.animationDelay = (Math.random()*4) + 's';
+    s.style.animationDuration = (3 + Math.random()*4) + 's';
+    s.style.opacity = (0.15 + Math.random()*0.6);
+    wrap.appendChild(s);
+  }
+})();
+
+(function(){
+  var wrap = document.getElementById('particles');
+  for(var i=0;i<30;i++){
+    var p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDuration = (8 + Math.random()*10) + 's';
+    p.style.animationDelay = (Math.random()*8) + 's';
+    var size = (1 + Math.random()*3);
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    wrap.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>
