@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Shooter — Демо-сайт гри · WebUa</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+  html{scroll-behavior:smooth;}
+  body{background:#0a0520;color:#e0d5ff;overflow-x:hidden;}
+
+  /* ФОН */
+  .bg{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 30% 40%,#2a1555,transparent 60%),radial-gradient(circle at 70% 60%,#0d3d4a,transparent 60%);animation:bgShift 14s ease-in-out infinite;pointer-events:none;}
+  @keyframes bgShift{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+
+  .orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:0.5;z-index:-2;pointer-events:none;}
+  .orb.o1{width:450px;height:450px;background:#a15ad4;top:-120px;left:-120px;animation:float 16s infinite;}
+  .orb.o2{width:380px;height:380px;background:#5ad4ff;bottom:-120px;right:-120px;animation:float 16s infinite reverse;}
+  @keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(70px,-70px);}}
+
+  .stars{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;}
+  .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:tw 3s infinite;}
+  @keyframes tw{0%,100%{opacity:0.2;}50%{opacity:1;}}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 30px;position:relative;overflow:hidden;}
+
+  h1{
+    font-size:clamp(2.5rem,7vw,5.5rem);
+    background:linear-gradient(90deg,#a15ad4,#5ad4ff,#a15ad4);background-size:200% auto;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:22px;position:relative;
+    animation:fadeUp 1.2s both, shimmer 3s linear infinite;
+  }
+  @keyframes shimmer{to{background-position:200% center;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+
+  .tag{font-size:1.25rem;opacity:0.88;margin-bottom:44px;position:relative;animation:fadeUp 1.2s .3s both;}
+
+  .buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;animation:fadeUp 1.2s .6s both;}
+  .btn{display:inline-block;padding:16px 34px;text-decoration:none;border-radius:14px;font-weight:700;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden;}
+  .btn-primary{background:linear-gradient(135deg,#6b2ec4,#a15ad4);color:#fff;box-shadow:0 12px 28px rgba(161,90,212,0.4);animation:pulseBtn 2.5s ease-in-out infinite 2s;}
+  @keyframes pulseBtn{
+    0%,100%{box-shadow:0 12px 28px rgba(161,90,212,0.4),0 0 0 0 rgba(161,90,212,0.5);}
+    50%{box-shadow:0 12px 28px rgba(161,90,212,0.4),0 0 0 20px rgba(161,90,212,0);}
+  }
+  .btn-primary:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(161,90,212,0.6);}
+  .btn-ghost{background:rgba(255,255,255,0.08);color:#e0d5ff;border:1px solid rgba(161,90,212,0.35);}
+  .btn-ghost:hover{transform:translateY(-5px);background:rgba(161,90,212,0.15);}
+
+  /* МАРКИ */
+  .marquee{overflow:hidden;white-space:nowrap;padding:26px 0;border-top:1px solid rgba(161,90,212,0.2);border-bottom:1px solid rgba(161,90,212,0.2);}
+  .marquee-track{display:inline-block;animation:scroll 30s linear infinite;font-size:1.3rem;font-weight:700;letter-spacing:0.1em;color:rgba(161,90,212,0.5);}
+  .marquee-track span{margin:0 26px;}
+  @keyframes scroll{to{transform:translateX(-50%);}}
+
+  /* СЕКЦИИ */
+  section{padding:110px 30px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+  h2{font-size:clamp(1.8rem,4vw,2.6rem);color:#a15ad4;margin-bottom:16px;text-align:center;letter-spacing:-0.02em;}
+  .sub{text-align:center;opacity:0.72;margin-bottom:52px;}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(60px);transition:opacity 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .reveal.d1{transition-delay:.1s;}
+  .reveal.d2{transition-delay:.2s;}
+  .reveal.d3{transition-delay:.3s;}
+
+  /* FEATURES */
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;}
+  .feature{background:rgba(161,90,212,0.08);border:1px solid rgba(161,90,212,0.22);border-radius:20px;padding:32px;text-align:center;transition:transform .4s cubic-bezier(.2,.8,.2,1),background .35s,box-shadow .35s;position:relative;overflow:hidden;}
+  .feature::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(90,212,255,0.2),transparent 60%);opacity:0;transition:opacity .45s;}
+  .feature:hover{transform:translateY(-12px);background:rgba(161,90,212,0.15);box-shadow:0 25px 50px rgba(161,90,212,0.3);}
+  .feature:hover::before{opacity:1;}
+  .feature .ico{font-size:2.8rem;margin-bottom:16px;display:inline-block;transition:transform .4s;position:relative;}
+  .feature:hover .ico{transform:scale(1.25) rotate(-10deg);}
+  .feature h3{margin-bottom:10px;color:#5ad4ff;font-size:1.15rem;position:relative;}
+  .feature p{opacity:0.8;font-size:0.95rem;position:relative;}
+
+  /* GALLERY */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+  .gallery div{aspect-ratio:16/10;background:linear-gradient(135deg,#2a1555,#4a2080);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .35s;cursor:pointer;position:relative;overflow:hidden;}
+  .gallery div::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,0.15) 50%,transparent 60%);transform:translateX(-100%);transition:transform .7s;}
+  .gallery div:hover{transform:scale(1.06) translateY(-4px);box-shadow:0 20px 40px rgba(161,90,212,0.35);}
+  .gallery div:hover::before{transform:translateX(100%);}
+
+  footer{padding:60px 30px;text-align:center;opacity:0.65;border-top:1px solid rgba(161,90,212,0.2);position:relative;z-index:1;}
+  footer a{color:#5ad4ff;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="stars" id="stars"></div>
+
+<div class="hero">
+  <div>
+    <h1>🚀 SPACE SHOOTER</h1>
+    <div class="tag">Битви в глибокому космосі</div>
+    <div class="buttons">
+      <a href="#" class="btn btn-primary">Завантажити</a>
+      <a href="#" class="btn btn-ghost">Трейлер</a>
+    </div>
+  </div>
+</div>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>👾 50+ ВОРОГІВ</span><span>⚡ ШВИДКИЙ ГЕЙМПЛЕЙ</span><span>🎨 НЕОНОВА ГРАФІКА</span><span>🏆 ТУРНІРИ</span>
+    <span>👾 50+ ВОРОГІВ</span><span>⚡ ШВИДКИЙ ГЕЙМПЛЕЙ</span><span>🎨 НЕОНОВА ГРАФІКА</span><span>🏆 ТУРНІРИ</span>
+  </div>
+</div>
+
+<section>
+  <h2 class="reveal">Особливості</h2>
+  <p class="sub reveal d1">Що робить гру унікальною</p>
+  <div class="features">
+    <div class="feature reveal d1"><div class="ico">👾</div><h3>50+ ворогів</h3><p>Різні типи і боси</p></div>
+    <div class="feature reveal d2"><div class="ico">⚡</div><h3>Швидкий геймплей</h3><p>Динамічні бої</p></div>
+    <div class="feature reveal d3"><div class="ico">🎨</div><h3>Неонова графіка</h3><p>Стиль 80-х</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="reveal">Галерея</h2>
+  <p class="sub reveal d1">Скріншоти з гри</p>
+  <div class="gallery">
+    <div class="reveal d1">🌌</div>
+    <div class="reveal d1">🚀</div>
+    <div class="reveal d2">👾</div>
+    <div class="reveal d2">💥</div>
+  </div>
+</section>
+
+<footer>
+  © Space Shooter 2026 · Демо-сторінка від <a href="index.html">WebUa</a>
+</footer>
+
+<script>
+(function(){
+  var w = document.getElementById('stars');
+  for(var i=0;i<80;i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + '%';
+    s.style.top = Math.random()*100 + '%';
+    s.style.animationDelay = (Math.random()*3) + 's';
+    s.style.animationDuration = (2 + Math.random()*3) + 's';
+    w.appendChild(s);
+  }
+})();
+
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+</script>
+</body>
+</html>
